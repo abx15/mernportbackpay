@@ -8,6 +8,13 @@ import crypto from 'crypto';
 
 export const createOrder = async (req: Request, res: Response) => {
     const { serviceName, customerName, customerEmail, customerPhone, amount } = req.body;
+
+    // Validate Environment Variables
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+        console.error("FATAL: Razorpay credentials missing in process.env");
+        return res.status(500).json({ message: 'Server configuration error: Razorpay credentials missing' });
+    }
+
     try {
         const options = {
             amount: amount * 100, // in paise
@@ -15,6 +22,7 @@ export const createOrder = async (req: Request, res: Response) => {
             receipt: `receipt_${Date.now()}`,
         };
 
+        console.log("Creating Razorpay order with options:", options);
         const order = await razorpay.orders.create(options);
 
         const newOrder = new Order({
@@ -29,8 +37,12 @@ export const createOrder = async (req: Request, res: Response) => {
         await newOrder.save();
 
         res.json({ order, key_id: process.env.RAZORPAY_KEY_ID });
-    } catch (error) {
-        res.status(500).json({ message: 'Error creating Razorpay order' });
+    } catch (error: any) {
+        console.error('Error creating Razorpay order:', error);
+        res.status(500).json({
+            message: 'Error creating Razorpay order',
+            details: error.message
+        });
     }
 };
 
