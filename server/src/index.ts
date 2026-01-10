@@ -28,7 +28,10 @@ const connectDB = async () => {
     }
 };
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    // connectDB(); // Uncomment after setting MONGO_URI in .env
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+export default app;
