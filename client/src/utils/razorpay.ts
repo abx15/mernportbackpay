@@ -3,11 +3,23 @@ import axios from "axios";
 export const handlePayment = async (service: { title: string; price: number }) => {
     try {
         // Ensure apiUrl doesn't double up on /api
-        let apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        let apiUrl = import.meta.env.VITE_API_URL;
+
+        // Fallback or warning for production
+        if (!apiUrl) {
+            if (window.location.hostname !== "localhost") {
+                console.error("CRITICAL: VITE_API_URL is missing in production build! Falling back to current origin.");
+                apiUrl = window.location.origin; // Try to use same origin as fallback
+            } else {
+                apiUrl = "http://localhost:5000";
+            }
+        }
+
         if (apiUrl.endsWith("/api")) {
             apiUrl = apiUrl.replace(/\/api$/, "");
         }
 
+        console.log("Current Environment:", import.meta.env.MODE);
         console.log("Initiating payment request to:", `${apiUrl}/api/orders`);
 
         // 1. Create Order on Backend
