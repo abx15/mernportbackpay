@@ -1,0 +1,13 @@
+﻿
+> client@1.0.0 build
+> tsc && vite build Check-Path build_error.txt
+
+src/components/SaaS/Footer.tsx(29,69): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'size' does not exist in type 'Partial<unknown> & Attributes'.
+src/pages/AdminLogin.tsx(16,24): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/pages/Contact.tsx(31,39): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/pages/GiveMeWork.tsx(32,24): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/pages/Projects.tsx(19,26): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/pages/Services.tsx(77,24): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/pages/Services.tsx(96,28): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
