@@ -73,6 +73,11 @@ export const handlePayment = async (service: { title: string; price: number }) =
             response: error.response?.data,
             status: error.response?.status
         });
-        alert(`Error initiating payment: ${error.response?.data?.message || error.message}`);
+
+        if (error.response?.status === 404) {
+            alert(`Error 404: The backend API was not found at ${error.config.url}. Please ensure your VITE_API_URL is correctly set in Vercel settings.`);
+        } else {
+            alert(`Error initiating payment: ${error.response?.data?.message || error.message}`);
+        }
     }
 };
