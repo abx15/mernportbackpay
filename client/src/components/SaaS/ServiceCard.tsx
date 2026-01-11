@@ -8,6 +8,7 @@ interface ServiceCardProps {
   description: string;
   techStack: string[];
   price: number;
+  features?: string[];
   onBuy?: () => void;
   highlight?: boolean;
 }
@@ -17,6 +18,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   description,
   techStack,
   price,
+  features = [],
   onBuy,
   highlight = false,
 }) => {
@@ -25,16 +27,22 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.3 }}
       className={`relative p-10 rounded-[3rem] border flex flex-col h-full transition-all duration-500 ${
         highlight
-          ? "border-primary bg-white shadow-2xl shadow-primary/10 scale-105"
-          : "border-gray-100 bg-white hover:border-primary/20 hover:soft-shadow"
+          ? "border-primary bg-gradient-to-br from-white to-primary/5 shadow-2xl shadow-primary/20 scale-105"
+          : "border-gray-200 bg-white hover:border-primary/30 hover:shadow-xl hover:shadow-primary/10"
       }`}
     >
       {highlight && (
-        <div className="absolute -top-5 left-1/2 -translate-x-1/2 px-6 py-2 bg-primary text-white rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+        <motion.div
+          animate={{ y: [0, -5, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute -top-5 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-primary to-blue-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-primary/40"
+        >
           <Sparkles size={14} /> Recommended
-        </div>
+        </motion.div>
       )}
 
       <div className="mb-8">
@@ -54,7 +62,25 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       </div>
 
       <div className="space-y-4 mb-12 flex-1">
-        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4">
+        {features.length > 0 && (
+          <>
+            <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4">
+              Key Features
+            </p>
+            {features.map((feature) => (
+              <div key={feature} className="flex items-center gap-3">
+                <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                  <Check size={12} strokeWidth={4} />
+                </div>
+                <span className="text-sm font-semibold text-foreground/80">
+                  {feature}
+                </span>
+              </div>
+            ))}
+          </>
+        )}
+
+        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4 pt-4">
           Tech Ecosystem
         </p>
         {techStack.map((tech) => (
@@ -69,18 +95,21 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         ))}
       </div>
 
-      <button
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
         onClick={onBuy || (() => handlePayment({ title, price }))}
         className={`w-full py-5 rounded-full font-black uppercase tracking-[0.2em] text-xs transition-all flex items-center justify-center gap-3 ${
           highlight
-            ? "btn-orange shadow-xl shadow-primary/20"
-            : "bg-gray-50 border border-gray-100 text-foreground hover:bg-gray-100"
+            ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-xl shadow-primary/30 hover:shadow-2xl"
+            : "bg-gray-50 border border-gray-200 text-foreground hover:bg-primary hover:text-white hover:border-primary"
         }`}
       >
         <ShoppingCart size={18} /> Buy Now
-      </button>
+      </motion.button>
     </motion.div>
   );
 };
 
 export default ServiceCard;
+
